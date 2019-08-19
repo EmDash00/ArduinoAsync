@@ -35,9 +35,6 @@ protected:
 	// Desired interval between runs
 	unsigned long interval;
 
-	// Desired interval to pause execution
-	unsigned long pause_interval = 0;
-
 	// If time exceeds timeout (ms), shouldRun() will always return false
 	unsigned long timeout;
 
