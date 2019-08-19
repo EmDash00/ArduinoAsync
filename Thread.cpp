@@ -1,12 +1,8 @@
 #include "Thread.h"
 
-Thread::Thread(void (*callback)(void), unsigned long _interval){
-	enabled = true;
-	onRun(callback);
-	_cached_next_run = 0;
+Thread::Thread(void (*callback)(void), unsigned long _interval) : onRun(callback), ThreadID((int)this){
 	last_run = millis();
 
-	ThreadID = (int)this;
 	#ifdef USE_THREAD_NAMES
 		ThreadName = "Thread ";
 		ThreadName = ThreadName + ThreadID;

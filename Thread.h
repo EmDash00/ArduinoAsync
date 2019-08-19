@@ -39,7 +39,7 @@ protected:
 	unsigned long last_run;
 
 	// Scheduled run in Ms (MUST BE CACHED)	
-	unsigned long _cached_next_run;
+	unsigned long _cached_next_run = 0;
 
 	/*
 		IMPORTANT! Run after all calls to run()
@@ -58,7 +58,7 @@ protected:
 public:
 
 	// If the current Thread is enabled or not
-	bool enabled;
+	bool enabled = true;
 
 	// ID of the Thread (initialized from memory adr.)
 	int ThreadID;

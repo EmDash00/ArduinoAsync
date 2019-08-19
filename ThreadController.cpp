@@ -2,8 +2,6 @@
 #include "ThreadController.h"
 
 ThreadController::ThreadController(unsigned long _interval): Thread(){
-	cached_size = 0;
-
 	clear();
 	setInterval(_interval);
 

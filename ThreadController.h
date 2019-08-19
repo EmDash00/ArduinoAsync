@@ -24,7 +24,7 @@
 class ThreadController: public Thread{
 protected:
 	Thread* thread[MAX_THREADS];
-	int cached_size;
+	int cached_size = 0;
 public:
 	ThreadController(unsigned long _interval = 0);
 
