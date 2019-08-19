@@ -36,7 +36,15 @@
 
 // Gets a pointer to the eventual result of a thread's work of type 'type'.
 // Warning, if the thread doesn't have a result, the AWAIT will never resolve
-#define AWAIT(type, _thread, _flag) (_thread->result ? (type)_thread->result : YIELD_TO(_thread, _flag))
+#define AWAIT(type, _thread, _flag)                     \
+    _thread->result ? (type)_thread->result : nullptr); \
+    ({                                                  \
+        if (!_thread->result)                           \
+            YIELD_TO(_thread, _flag)                    \
+    })
+
+
+
 
 // Suspends the thread's execution for pause_interval ms.
 #define PAUSE(_pause_interval, _flag) (pause_interval = _pause_interval), YIELD(_flag)
