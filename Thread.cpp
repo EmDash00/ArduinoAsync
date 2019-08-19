@@ -60,7 +60,7 @@ bool Thread::shouldRun(unsigned long time){
         default:
             bool timed_out = !((time - (_t0 + timeout)) & 0x80000000);
 
-            // Exceeded the time limit, AND not timed out, AND is enabled, ? Then should run...
+            // Exceeded the time limit, AND not timed out, AND is enabled? Then should run...
             return !time_remaining && !timeout && enabled;
     }
 

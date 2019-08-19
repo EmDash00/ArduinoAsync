@@ -26,20 +26,20 @@
 #define YIELD(...) GET_MACRO(__VA_ARGS__, YIELD_CUSTOM, YIELD_DEFAULT)(__VA_ARGS__)
 
 // Called when YIELD is called with a custom flag.
-#define YIELD_CUSTOM(_flag) (flag = _flag; return)
+#define YIELD_CUSTOM(_flag) (flag = _flag); return
 
 // Called when YIELD is called without a custom flag. Sets default flag 0.
 #define YIELD_DEFAULT (YIELD_CUSTOM(0))
 
 // Links the specified thread and YIELDs. The linked thread is called immediately from the main loop.
-#define YIELD_TO(_thread, _flag) (_linked_thread = thread, YIELD(_flag))
+#define YIELD_TO(_thread, _flag) (_linked_thread = thread), YIELD(_flag)
 
 // Gets a pointer to the eventual result of a thread's work of type 'type'.
 // Warning, if the thread doesn't have a result, the AWAIT will never resolve
 #define AWAIT(type, _thread, _flag) (_thread->result ? (type)_thread->result : YIELD_TO(_thread, _flag))
 
 // Suspends the thread's execution for pause_interval ms.
-#define PAUSE(_pause_interval, _flag) (pause_interval = _pause_interval, YIELD(_flag))
+#define PAUSE(_pause_interval, _flag) (pause_interval = _pause_interval), YIELD(_flag)
 
 // YIELDs with flag -1. The ThreadController will remove any thread with flag -1 after calling run()
 #define HALT(_finished = true, YIELD(-1))
