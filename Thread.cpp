@@ -12,12 +12,22 @@ onRun(callback), ThreadID((int)this), timeout(_timeout){
 	setInterval(_interval);
 };
 
-void Thread::runned(unsigned long time){
-	// Saves last_run
-	last_run = time;
+void Thread::runned(unsigned long time)
+{
+    // Saves last_run
+    last_run = time;
 
-	// Cache next run
-	_cached_next_run = last_run + interval;
+    // Cache next run
+    switch (pause_interval) {
+        case pause_interval 0:
+            _cached_next_run = last_run + interval;
+            break;
+        default:
+            _cached_next_run = last_run + pause_interval;
+            break;
+
+    }
+
 }
 
 void Thread::setInterval(unsigned long _interval){
@@ -37,8 +47,7 @@ bool Thread::shouldRun(unsigned long time){
 	// If the "sign" bit is set the signed difference would be negative
 	bool time_remaining = (time - _cached_next_run) & 0x80000000;
 
-	if(!time_remaining && enabled && !_started)
-    {
+	if(!time_remaining && enabled && !_started){
 	    _started = true;
 	    _t0 = time;
     }
