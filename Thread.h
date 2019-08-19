@@ -35,6 +35,9 @@ protected:
 	// Desired interval between runs
 	unsigned long interval;
 
+	// Desired interval to pause execution
+	unsigned long pause_interval = 0;
+
 	// If time exceeds timeout (ms), shouldRun() will always return false
 	unsigned long timeout;
 
@@ -47,6 +50,7 @@ protected:
     // Time that the thread was started
     unsigned long _t0;
 
+    // True when shouldRun returns true for the first time.
     bool _started = false;
 
 	/*
