@@ -35,11 +35,19 @@ protected:
 	// Desired interval between runs
 	unsigned long interval;
 
+	// If time exceeds timeout (ms), shouldRun() will always return false
+	unsigned long timeout;
+
 	// Last runned time in Ms
 	unsigned long last_run;
 
 	// Scheduled run in Ms (MUST BE CACHED)	
 	unsigned long _cached_next_run = 0;
+
+    // Time that the thread was started
+    unsigned long _t0;
+
+    bool _started = false;
 
 	/*
 		IMPORTANT! Run after all calls to run()
@@ -68,10 +76,12 @@ public:
 		String ThreadName;			
 	#endif
 
-	Thread(void (*callback)(void) = NULL, unsigned long _interval = 0);
+	Thread(void (*callback)(void) = NULL, unsigned long _interval = 0, unsigned long _timeout = 0);
 
 	// Set the desired interval for calls, and update _cached_next_run
 	virtual void setInterval(unsigned long _interval);
+
+	void setTimeout(unsigned long _timeout);
 
 	// Return if the Thread should be runned or not
 	virtual bool shouldRun(unsigned long time);

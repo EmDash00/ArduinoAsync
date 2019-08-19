@@ -1,6 +1,7 @@
 #include "Thread.h"
 
-Thread::Thread(void (*callback)(void), unsigned long _interval) : onRun(callback), ThreadID((int)this){
+Thread::Thread(void (*callback)(void), unsigned long _interval, unsigned long _timeout) :
+onRun(callback), ThreadID((int)this), timeout(_timeout){
 	last_run = millis();
 
 	#ifdef USE_THREAD_NAMES
@@ -27,12 +28,36 @@ void Thread::setInterval(unsigned long _interval){
 	_cached_next_run = last_run + interval;
 }
 
+void Thread::setTimeout(unsigned long _timeout)
+{
+    timeout = _timeout;
+}
+
 bool Thread::shouldRun(unsigned long time){
 	// If the "sign" bit is set the signed difference would be negative
 	bool time_remaining = (time - _cached_next_run) & 0x80000000;
 
-	// Exceeded the time limit, AND is enabled? Then should run...
-	return !time_remaining && enabled;
+	if(!time_remaining && enabled && !_started)
+    {
+	    _started = true;
+	    _t0 = time;
+    }
+
+	switch (timeout)
+    {
+        case timeout 0:
+            // Exceeded the time limit, AND is enabled? Then should run...
+            return !time_remaining && enabled;
+        default:
+            bool timed_out = !((time - (_t0 + timeout)) & 0x80000000);
+
+            // Exceeded the time limit, AND not timed out, AND is enabled, ? Then should run...
+            return !time_remaining && !timeout && enabled;
+    }
+
+
+
+
 }
 
 void Thread::onRun(void (*callback)(void)){
@@ -42,6 +67,9 @@ void Thread::onRun(void (*callback)(void)){
 void Thread::run(){
 	if(_onRun != NULL)
 		_onRun();
+
+
+
 
 	// Update last_run and _cached_next_run
 	runned();
