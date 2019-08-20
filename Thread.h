@@ -22,35 +22,59 @@
 
 #include <inttypes.h>
 
-// Yields execution to the main thread, setting a flag that represents the thread's state.
-#define YIELD(...) GET_MACRO(__VA_ARGS__, YIELD_CUSTOM, YIELD_DEFAULT)(__VA_ARGS__)
+#include "ThreadController.h"
 
-// Called when YIELD is called with a custom flag.
-#define YIELD_CUSTOM(_flag) (flag = _flag); return
+
+// YIELDs execution back to the ThreadController
+#define YIELD(_flag) (flag = _flag); return
 
 // Called when YIELD is called without a custom flag. Sets default flag 0.
-#define YIELD_DEFAULT (YIELD_CUSTOM(0))
+#define YIELD_DEFAULT (YIELD(0))
 
 // Links the specified thread and YIELDs. The linked thread is called immediately from the main loop.
 #define YIELD_TO(_thread, _flag) (_linked_thread = thread), YIELD(_flag)
 
-// Gets a pointer to the eventual result of a thread's work of type 'type'.
+// Gets a pointer to the eventual result of a WorkerThread's work of type 'type'.
 // Warning, if the thread doesn't have a result, the AWAIT will never resolve
+// Unfortunately cannot be used as a function parameter due to having returns within the macro body.
 #define AWAIT(type, _thread, _flag)                     \
     _thread->result ? (type)_thread->result : nullptr); \
+    awaiting = true;                                    \
     ({                                                  \
-        if (!_thread->result)                           \
-            YIELD_TO(_thread, _flag)                    \
+        if (!linked_thread)                             \
+        {                                               \
+            (_thread->num_awaiting)++;                  \
+            YIELD_TO(_thread, _flag);                   \
+        }                                               \
+        else                                            \
+        {                                               \
+            if (!_thread_result)                        \
+            {                                           \
+                YIELD(_flag);                           \
+            }                                           \
+            else                                        \
+            {                                           \
+                linked_thread = nullptr;                \
+                awaiting = false;                       \
+                (_thread->num_awaiting)--;              \
+            }                                           \
+        }                                               \
     })
-
-
-
 
 // Suspends the thread's execution for pause_interval ms.
 #define PAUSE(_pause_interval, _flag) (pause_interval = _pause_interval), YIELD(_flag)
 
+// Suspends the thread's execution indefinetely. Thread will resume on a call to RESUME
+#define FREEZE(_flag) (frozen = true), YIELD(_flag)
+
+// Unsuspends a suspended thread.
+#define RESUME(_thread) (_thread->frozen = false, _thread->pause_interval = 0;)
+
 // YIELDs with flag -1. The ThreadController will remove any thread with flag -1 after calling run()
-#define HALT(_finished = true, YIELD(-1))
+#define HALT YIELD(-1)
+
+//HALTs the thread offshooting another thread.
+#define HALT_TO(_thread) YIELD_TO(_thread, -1)
 
 /*
 	Uncomment this line to enable ThreadName Strings.
@@ -73,6 +97,9 @@ protected:
 	// If time exceeds timeout (ms), shouldRun() will always return false
 	unsigned long timeout;
 
+	// If the thread is frozen or not.
+	bool frozen = false;
+
 	// Last runned time in Ms
 	unsigned long last_run;
 
@@ -85,11 +112,10 @@ protected:
     // True when shouldRun returns true for the first time.
     bool _started = false;
 
-    // Used to store and restore the state of a thread.
-    int flag = 0;
+    // The number of threads awaiting this one.
+    // Used by workers to determine when every thread that wants the results gets it before clearing it and continuing.
+    int num_awaiting = 0;
 
-    // Thread to be run due to a call to AWAIT()
-    Thread *_linked_thread = nullptr;
 
 
 	/*
@@ -111,12 +137,22 @@ public:
 	// If the current Thread is enabled or not
 	bool enabled = true;
 
+	// If the current thread is awaiting another thread.
+	bool awaiting = false;
+
 	// ID of the Thread (initialized from memory adr.)
 	int ThreadID;
 
+    // Used to store and restore the state of a thread.
+    int flag = 0;
+
+    // Thread this thread has linked via YIELD_TO
+    Thread *linked_thread = nullptr;
+
+    //Represents the result of a thread's work, if any. "Void" threads have result always equal to nullptr.
     void *result = nullptr;
 
-	#ifdef USE_THREAD_NAMES
+#ifdef USE_THREAD_NAMES
 		// Thread Name (used for better UI).
 		String ThreadName;			
 	#endif

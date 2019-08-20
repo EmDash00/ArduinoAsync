@@ -27,29 +27,29 @@ void ThreadController::run(){
 		if(thread[i]){
 			checks++;
 
-			// Clear any previously linked threads.
-			thread[i]->_linked_thread = nullptr;
-
 			if(thread[i]->shouldRun(time)){
 				thread[i]->run();
 
-                // HALT was called.
+				
+				// Thread was linked using YIELD_TO or AWAIT
+				if (thread[i]->linked_thread)
+                {
+				    add(thread[i]->linked_thread);
+				    
+				    // Don't remove the linked thread if it's AWAITing a result.
+				    if (!thread[i]->awaiting)
+				        thread[i]->linked_thread = nullptr;
+				        
+                }
+                // HALT was called within the thread. Remove it.
                 if (thread[i]->flag == -1)
-                    remove(i);
+                    remove(thread[i]->ThreadID);
 			}
 		}
 	}
 
 	// ThreadController extends Thread, so we should flag as runned thread
 	runned();
-
-    if (thread[i]->_linked_thread){
-        add(thread[i]->_linked_thread);
-
-        if (thread[i]->_linked_thread->shouldRun()){
-            thread[i]->_linked_thread->run();
-        }
-    }
 }
 
 
