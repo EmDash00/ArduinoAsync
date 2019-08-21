@@ -49,6 +49,12 @@ public:
 			if(thread[i]->shouldRun()){
 				thread[i]->run();
 			}
+
+			// Well, can't remove the thread, so we freeze it.
+			if (thread[i]->flag == -1){
+			    thread[i]->frozen = true;
+            }
+
 		}
 
 		// StaticThreadController extends Thread, so we should flag as runned thread

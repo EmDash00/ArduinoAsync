@@ -12,8 +12,7 @@ onRun(callback), ThreadID((int)this), timeout(_timeout){
 	setInterval(_interval);
 };
 
-void Thread::runned(unsigned long time)
-{
+void Thread::runned(unsigned long time){
     // Saves last_run
     last_run = time;
 
@@ -38,12 +37,16 @@ void Thread::setInterval(unsigned long _interval){
 	_cached_next_run = last_run + interval;
 }
 
-void Thread::setTimeout(unsigned long _timeout)
-{
+void Thread::setTimeout(unsigned long _timeout){
     timeout = _timeout;
 }
 
 bool Thread::shouldRun(unsigned long time){
+    // Nothing below matters if the thread is frozen.
+    if (frozen){
+        return false;
+    }
+
 	// If the "sign" bit is set the signed difference would be negative
 	bool time_remaining = (time - _cached_next_run) & 0x80000000;
 
@@ -54,6 +57,7 @@ bool Thread::shouldRun(unsigned long time){
 
 	switch (timeout)
     {
+	    // A timeout of 0 doesn't make sense and instead signifies a timeout that hasn't been set.
         case timeout 0:
             // Exceeded the time limit, AND is enabled? Then should run...
             return !time_remaining && enabled;
@@ -74,7 +78,7 @@ void Thread::onRun(void (*callback)(void)){
 }
 
 void Thread::run(){
-	if(_onRun != NULL)
+	if(_onRun != nullptr)
 		_onRun();
 
 
