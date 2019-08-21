@@ -25,7 +25,7 @@
 #include "ThreadController.h"
 
 
-// YIELDs execution back to the ThreadController
+// YIELDs execution back to the ThreadController. This and macros that depend on it must be used in run().
 #define YIELD(_flag) (flag = _flag); return
 
 // Called when YIELD is called without a custom flag. Sets default flag 0.
@@ -34,7 +34,7 @@
 // Links the specified thread and YIELDs. The linked thread is called immediately from the main loop.
 #define YIELD_TO(_thread, _flag) (_linked_thread = thread), YIELD(_flag)
 
-// Gets a pointer to the eventual result of a WorkerThread's work of type 'type'.
+// Gets a pointer to the eventual result of a WorkerThread's work of type 'type'. You can call it a future if you want.
 // Warning, if the thread doesn't have a result, the AWAIT will never resolve
 // Unfortunately cannot be used as a function parameter due to having returns within the macro body.
 #define AWAIT(type, _thread, _flag)                     \
@@ -73,7 +73,7 @@
 // YIELDs with flag -1. The ThreadController will remove any thread with flag -1 after calling run()
 #define HALT YIELD(-1)
 
-//HALTs the thread offshooting another thread.
+// HALTs the thread offshooting another thread.
 #define HALT_TO(_thread) YIELD_TO(_thread, -1)
 
 /*

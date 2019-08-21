@@ -10,11 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0391b75e-50b2-4ecc-ac54-3a8635eb867f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/serialmonitor_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Thread.h" beforeDir="false" afterPath="$PROJECT_DIR$/Thread.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ThreadController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ThreadController.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1566244945461</updated>
       <workItem from="1566244946611" duration="11698000" />
-      <workItem from="1566338782917" duration="4768000" />
+      <workItem from="1566338782917" duration="5583000" />
     </task>
     <servers />
   </component>
