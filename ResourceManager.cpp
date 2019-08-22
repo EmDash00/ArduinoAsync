@@ -19,7 +19,7 @@ Resource<T> * ResourceManager::Obtain(Thread *thread)
 
 bool ResourceManager::Release(Thread *thread, Resource<T> *&resource)
 {
-    // Release ownership and destroy the pointer to the resource if the owner releases.
+    // Release ownership and destroy the pointer to the resource if the owner releases so they no longer have access.
     // No memory leaks here... resource is a variable on the stack.
     if (owner == thread){
        owner = nullptr;
