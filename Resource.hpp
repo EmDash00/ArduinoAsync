@@ -11,7 +11,7 @@ public:
     Resource();
     explicit Resource(T val) : data(val) { }
     T Get();
-    Set(T val);
+    void Set(T val);
 
 protected:
     T data;

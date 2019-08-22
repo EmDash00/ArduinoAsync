@@ -3,3 +3,13 @@
 //
 
 #include "Resource.hpp"
+
+T Resource::Get()
+{
+    return data;
+}
+
+void Resource::Set(T val)
+{
+    data = val;
+}
