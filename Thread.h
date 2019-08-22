@@ -37,7 +37,7 @@
    also setting the specified flag. Note: flag -1 is special. See HALT.
    This and macros that depend on it must be used in run() because the return won't work as intended otherwise.
 */
-#define YIELD(_flag) (flag = _flag); return
+#define YIELD(_flag) (flag = _flag); runned(); return
 
 // Called when YIELD is called without a custom flag. Sets default flag 0.
 #define YIELD_DEFAULT (YIELD(0))

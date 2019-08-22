@@ -1,7 +1,7 @@
 #include "Thread.h"
 
 Thread::Thread(void (*callback)(void), unsigned long _interval, unsigned long _timeout) :
-onRun(callback), ThreadID((int)this), timeout(_timeout){
+_onRun(callback), ThreadID((int)this), timeout(_timeout){
 	last_run = millis();
 
 	#ifdef USE_THREAD_NAMES
@@ -18,7 +18,7 @@ void Thread::runned(unsigned long time){
 
     // Cache next run
     switch (pause_interval) {
-        case pause_interval 0:
+        case 0:
             _cached_next_run = last_run + interval;
             break;
         default:
@@ -55,10 +55,14 @@ bool Thread::shouldRun(unsigned long time){
 	    _t0 = time;
     }
 
+	if (!time_remaining && pause_interval != 0){
+	    pause_interval = 0;
+    }
+
 	switch (timeout)
     {
 	    // A timeout of 0 doesn't make sense and instead signifies a timeout that hasn't been set.
-        case timeout 0:
+        case 0:
             // Exceeded the time limit, AND is enabled? Then should run...
             return !time_remaining && enabled;
         default:
@@ -67,10 +71,6 @@ bool Thread::shouldRun(unsigned long time){
             // Exceeded the time limit, AND not timed out, AND is enabled? Then should run...
             return !time_remaining && !timeout && enabled;
     }
-
-
-
-
 }
 
 void Thread::onRun(void (*callback)(void)){
