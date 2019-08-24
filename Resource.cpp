@@ -1,15 +1,26 @@
 //
-// Created by emdash00 on 8/22/19.
+// Created by emdash00 on 8/24/19.
 //
 
 #include "Resource.hpp"
 
-T Resource::Get()
+T * Resource::Acquire(Thread *thread)
 {
-    return data;
+    if (owner == nullptr)
+    {
+       owner = thread;
+       return data;
+    }
+    
+    return nullptr;
 }
 
-void Resource::Set(T val)
+void Resource::Release(Thread *thread, T *_data)
 {
-    data = val;
+    if (owner == thread)
+    {
+        owner = nullptr;
+        _data = nullptr;
+    }
 }
+

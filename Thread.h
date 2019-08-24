@@ -54,7 +54,7 @@
    CANNOT be used as a function parameter due to having returns within the macro body.
 */
 #define AWAIT(type, _thread, _flag)                     \
-    _thread->result ? (type)_thread->result : nullptr); \
+    (_thread->result ? (type)_thread->result : nullptr); \
     awaiting = true;                                    \
     ({                                                  \
         if (!linked_thread)                             \
@@ -75,6 +75,15 @@
                 (_thread->num_awaiting)--;              \
             }                                           \
         }                                               \
+    })
+
+#define ACQUIRE_RESOURCE(_resource, _flag) \
+    _resource.Acquire();                   \
+                                           \
+    ({                                     \
+        if (_resource.Acquire == nullptr){ \
+            YIELD(_flag);                  \
+        }                                  \
     })
 
 // Suspends the thread's execution for pause_interval ms.
@@ -103,6 +112,7 @@
 */
 // #define USE_THREAD_NAMES	1
 
+Thread _curentThread = nullptr;
 
 class Thread{
 protected:

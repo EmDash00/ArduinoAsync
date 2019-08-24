@@ -1,20 +1,26 @@
 //
-// Created by emdash00 on 8/22/19.
+// Created by emdash00 on 8/24/19.
 //
 
 #ifndef ARDUINOTHREAD_RESOURCE_HPP
 #define ARDUINOTHREAD_RESOURCE_HPP
 
 <template typename T>
-class Resource{
+class Resource
+{
+
 public:
     Resource();
-    explicit Resource(T val) : data(val) { }
-    T Get();
-    void Set(T val);
+    explicit Resource(T val) :  data(val) { }
+
+    T* Acquire(Thread *thread);
+    void Release(Thread *thread, T *_data);
+
+    T data;
+
 
 protected:
-    T data;
+    Thread *owner = nullptr;
 
 };
 
