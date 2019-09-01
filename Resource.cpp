@@ -1,26 +1,31 @@
 //
-// Created by emdash00 on 8/24/19.
+// Created by emdash00 on 9/1/19.
 //
 
 #include "Resource.hpp"
 
-T * Resource::Acquire(Thread *thread)
+bool Resource::Acquire(Thread *thread, int priority)
 {
-    if (owner == nullptr)
+    if (owner == nullptr || priority > owner_priority)
     {
-       owner = thread;
-       return data;
+        owner = thread;
+        return true;
     }
-    
-    return nullptr;
+    else
+    {
+        return false;
+    }
 }
 
-void Resource::Release(Thread *thread, T *_data)
+bool Resource::HaveOwnership(Thread *thread){
+    return (owner == thread);
+}
+
+
+void Resource::Release(Thread *thread)
 {
     if (owner == thread)
     {
         owner = nullptr;
-        _data = nullptr;
     }
 }
-

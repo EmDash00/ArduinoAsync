@@ -5,23 +5,22 @@
 #ifndef ARDUINOTHREAD_RESOURCE_HPP
 #define ARDUINOTHREAD_RESOURCE_HPP
 
-<template typename T>
+#include "Thread.h"
+
 class Resource
 {
 
 public:
-    Resource();
-    explicit Resource(T val) :  data(val) { }
-
-    T* Acquire(Thread *thread);
-    void Release(Thread *thread, T *_data);
-
-    T data;
-
+    bool Acquire(Thread *thread, int priority);
+    bool HaveOwnership(Thread *thread);
+    void Release(Thread *thread);
 
 protected:
-    Thread *owner = nullptr;
+    Resource( const Resource& ) = delete; // non construction-copyable
+    Resource& operator=( const Resource& ) = delete; // non copyable
 
+    Thread *owner = nullptr;
+    int owner_priority = -1;
 };
 
 

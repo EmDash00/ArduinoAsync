@@ -40,7 +40,7 @@
 #define YIELD(_flag) (flag = _flag); runned(); return
 
 // Called when YIELD is called without a custom flag. Sets default flag 0.
-#define YIELD_DEFAULT (YIELD(0))
+#define YIELD_DEFAULT YIELD(0)
 
 // Links the specified thread and YIELDs. The linked thread is called immediately from the main loop.
 #define YIELD_TO(_thread, _flag) (_linked_thread = thread), YIELD(_flag)
@@ -78,10 +78,9 @@
     })
 
 #define ACQUIRE_RESOURCE(_resource, _flag) \
-    _resource.Acquire();                   \
                                            \
     ({                                     \
-        if (_resource.Acquire == nullptr){ \
+        if (!_resource.Acquire()){         \
             YIELD(_flag);                  \
         }                                  \
     })
@@ -204,6 +203,9 @@ public:
 
 	// Runs Thread
 	virtual void run();
+
+	// Runs before the thread is removed.
+	virtual void cleanup();
 };
 
 #endif
