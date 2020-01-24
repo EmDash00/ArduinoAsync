@@ -28,7 +28,7 @@ If `m_flag` is set to -1 and the thread has yielded execution back to the `Threa
 the ThreadController removes the thread from the queue. The `HALT` keyword does exactly this.
 
 Threads can also be paused in this framework for a certain number of milliseconds using the
-`WAIT` keyword. Unlike `delay` WAIT will not block execution of the `ThreadController` and allows
+`WAIT` keyword. Unlike `delay` `WAIT` will not block execution of the `ThreadController` and allows
 context switching to continue for other tasks. Threads can also be paused indefinetely with
 `FREEZE`. Threads paused with `FREEZE` will not enter an awake state again until another thread
 uses `UNFREEZE(thread_ptr)`.
