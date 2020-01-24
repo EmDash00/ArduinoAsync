@@ -9,7 +9,7 @@ Static Thread Controllers have been for the time being removed.
 
 The name thread sticks around from the original but it may be renamed in a future release.
 
-Documentation and library are both still very WIP. This may become it's own seperate thing in the future.
+Documentation and library are both still very WIP. This may become its own seperate thing in the future.
 
 ### Concepts
 Like in ArduinoThread, the `run` method of a thread is called once per loop. This allows a programmmer
@@ -39,7 +39,7 @@ consumer semantics.
 All threads have an internal buffer of type void*. This is used to gather the return of an 
 asynchronously executing thread. Users of the library will not have to worry about this, however.
 
-The `AWAIT` statement will take a pointer to a thread and check it's buffer for the result which is
+The `AWAIT` statement will take a pointer to a thread and check its buffer for the result which is
 otherwise `nulltpr`. If multiple consumers `AWAIT` on a producer, a semaphore internal to the producer
 will block the producer from clearing the result and entering a sleeping state until all consumers have
 gotten the result.
