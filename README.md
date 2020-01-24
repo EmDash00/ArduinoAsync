@@ -1,4 +1,4 @@
-## ArduinoThreads Motivation
+## ArduinoAsync
 
 This is a fork of Ivan Seidel's [ArduinoThread](https://github.com/ivanseidel/ArduinoThread).
 
